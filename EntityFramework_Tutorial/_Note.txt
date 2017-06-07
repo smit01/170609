@@ -1,0 +1,90 @@
+﻿Entity Framework Tutorial for Beginners
+
+
+1. 開啟 PDF 檔，或連往網站:
+http://www.codeproject.com/Tips/739164/Entity-Framework-Tutorial-for-Beginners
+
+
+2. 詳讀文件內容。
+
+
+3. 連接到 (local)\SQLExpress，新增查詢視窗，執行下列指令以建立資料庫:
+
+create database LearnEF
+go
+
+use LearnEF
+go
+
+CREATE TABLE Employee
+(
+  EmpId int NOT NULL IDENTITY(1,1) PRIMARY KEY,
+  HREmpId nvarchar(10),
+  FirstName nvarchar(30),
+  LastName nvarchar(30),
+  Address nvarchar(30),
+  City nvarchar(30)
+)
+GO
+-- SearchEmployee '', ''
+CREATE PROCEDURE SearchEmployee
+(
+@FirstName varchar(30),
+@City varchar(30)
+)
+AS
+BEGIN
+  DECLARE @query nvarchar(1000)
+  SET @query = 'SELECT * FROM Employee e'
+  SET @query = @query + ' WHERE 1=1'
+  IF @FirstName != ''
+    SET @query = @query + ' AND FirstName LIKE ''' + @FirstName + '%'''
+  IF @City != ''
+    SET @query = @query + ' AND City LIKE ''' + @City + '%'''
+  EXEC (@query)
+END
+GO
+
+
+4. 繼續執行下列指令以設定權限: 
+-- SQLExpress預設已有 Login ID: BUILTIN\Users，
+-- 以下的指令將之設為 LearnDB 的使用者並設定讀寫權限
+USE [LearnEF]
+GO
+CREATE USER [Users] FOR LOGIN [BUILTIN\Users]
+GO
+USE [LearnEF]
+GO
+ALTER ROLE [db_datareader] ADD MEMBER [Users]
+GO
+USE [LearnEF]
+GO
+ALTER ROLE [db_datawriter] ADD MEMBER [Users]
+GO
+
+
+
+5. 解壓縮 LearnEF.zip
+
+
+6. 
+建議習作環境: VS Express 2012 for Web 
+           或 VS Express 2013 for Web
+
+
+7. 檔案 | 開啟專案，開啟解壓縮後的 LearnEF.sln
+
+
+8. 開啟 Web.config，搜尋
+   data source=.\Sql2012
+   換成
+   data source=.\SQLExpress
+
+
+9. 仍然是 Web.config，搜尋
+   user id=user_id;password=my_pwd
+   換成
+   integrated security=true
+
+10.開啟 Default.aspx，以瀏覽器檢視。
+
